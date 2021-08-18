@@ -4,7 +4,7 @@ from stream import Stream
 import plotly.graph_objects as go
 import numpy as np
 
-st.set_page_config(page_title="Flash Drum app", page_icon="🔥", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Flash Drum Simulator", page_icon="🔥", initial_sidebar_state="expanded", layout = "wide")
 
 header = st.container()
 mixture = st.container()
@@ -15,227 +15,213 @@ footer = st.container()
 
 compounds = ["benzene", "toluene", "chlorobenzene", "p-xylene",  "styrene"]
 
-################################################################################
-################################################################################
-################################################################################
-################################################################################
 with header:
-    st.title("FLASH DRUM PORJECT 🔥!")
-    st.text("In this app you can play simulations flash drum calculations for ideal mixtures.")
-    st.image("https://images.pexels.com/photos/3105242/pexels-photo-3105242.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260")
-################################################################################
-################################################################################
-################################################################################
-################################################################################
+    st.title("FLASH DRUM 🔥!")
+    st.markdown("Make calculations, simulate a flash drum unit and generate phase diagrams for ideal mixtures!")
+    st.image("./media/main_flash.png", width = 800)
+
 with mixture:
-    st.header("👩‍🔬 Prepare your mixture! 👨‍🔬")
-    st.markdown("Chose at leats two comoponents and introduce its molar composition.  \n"
+    st.header("Prepare your mixture!")
+    st.markdown("Choose at leats two comoponents and introduce its molar composition.  \n"
         "**NOTE:** the sum of the mole fractions must be equals to **ONE** (_1.0_). If it is greater molar, compositions will be normalized.")
 
 
     components = st.multiselect(label="Choose the mixture components", options= compounds)
-    
-
     fraction = {}    
    
     for i in components:
+        
         fraction[i] = st.number_input(label=i, key="Component_" + i, min_value=0.0000, max_value=1.0000, step=0.0001, format = "%.4f", value = 0.0)
+
     current_mixture = [key for key in fraction.keys()]
     components = fd.parameters(current_mixture)  
     nonZero = sum([z for z in fraction.values()])
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-if len(fraction) > 0:
+    feed_Stream = Stream(mComposition = fraction)
+    feed_Stream.normalize()
+    option = st.selectbox("Select an option", ["Calculations", "Simulations", "Diagrams"])
 
-    with calculations:
-        st.header("1.- Mixture calculations 💥")
-        st.markdown("Here you can find four type of calculations.")
+if len(fraction) > 1:
 
-        flash_c = fd.FlashDrum()
-        stream_c = Stream(mComposition = fraction)
-        Calculation = st.selectbox("Choose the calculation type:", ["BubbleT point", "BubbleP point", "DewT point", "DewP point"] )
-        if nonZero > 0:
-            flash_c.setFeedStream(stream_c)
+    if option == "Calculations":
 
-            if Calculation == "BubbleT point":
+        with calculations:
+            st.header("1.- Mixture calculations 💥")
+            st.markdown("Here you can find four type of calculations.")
 
-                st.subheader("1.1- BubbleT point")
+            flash_c = fd.FlashDrum()
+            stream_c = Stream(mComposition = feed_Stream.getmC())
+            Calculation = st.selectbox("Choose the calculation type:", ["BubbleT point", "BubbleP point", "DewT point", "DewP point"] )
+            if nonZero > 0:
+                flash_c.setFeedStream(stream_c)
 
-                with st.form(key = "BubbleT"):
-                    
-                    st.markdown("**Temperature of the Bubble point given a pressure:**")
-                    colBT1, colBT2 = st.columns([1, 1])
+                if Calculation == "BubbleT point":
 
-                    with colBT1:
+                    st.subheader("1.1- BubbleT point")
+
+                    with st.form(key = "BubbleT"):
                         
-                        P1 = st.number_input(label = "Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                                            
-                        buttonBT = st.form_submit_button("GO!")
+                        st.markdown("**Temperature of the Bubble point given a pressure:**")
+                        colBT1, colBT2 = st.columns([1, 1])
 
-                        if buttonBT:
-
-                            with colBT2:
-                                st.markdown("__Temperature__")
-                                with st.spinner('Calculating...'):
-                                    st.markdown("**{:.2f} K**".format(flash_c.bubbleT(P1, components)))
-                                    st.success("Calculations complete!")
-
-
-            elif Calculation == "BubbleP point":
-
-                st.subheader("1.2- BubbleP point")
-
-                with st.form(key = "BubbleP"):
-                    st.markdown("**Pressure of the Bubble point given a temperature:**")
-                    colBP1, colBP2 = st.columns([1, 1])
-                    with colBP1:
-
-                        T1 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-                        buttonBP = st.form_submit_button("GO!")
-
-                        if buttonBP:
-
-
-                            with colBP2:
-                                st.markdown("__Pressure__")
-                                with st.spinner('Calculating...'):
-                                    st.markdown("**{:.2f} kPa**".format(flash_c.bubbleP(T1, components)))
-                                    st.success("Calculations complete!")
-
-
-            elif Calculation == "DewT point":
-
-                    st.subheader("1.3- DewT point")
-
-                    with st.form(key = "DewT"):
-                        
-                        st.markdown("**Temperature of the Dew point given a pressure:**")
-                        colDT1, colDT2 = st.columns([1, 1])
-                        with colDT1:
+                        with colBT1:
                             
-                            P2 = st.number_input(label = "Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                                            
-                            buttonDT = st.form_submit_button("GO!")
+                            P1 = st.number_input(label = "Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                                                
+                            buttonBT = st.form_submit_button("GO!")
 
-                            if buttonDT:
-                
+                            if buttonBT:
 
-                                with colDT2:
+                                with colBT2:
                                     st.markdown("__Temperature__")
                                     with st.spinner('Calculating...'):
-                                        st.markdown("**{:.2f} K**".format(flash_c.dewT(P2, components)))
+                                        st.markdown("**{:.2f} K**".format(flash_c.bubbleT(P1, components)))
                                         st.success("Calculations complete!")
 
 
-            elif Calculation == "DewP point":
+                elif Calculation == "BubbleP point":
 
-                st.subheader("1.4- DewP point")
-                
-                with st.form(key = "DewP"):
-                    st.markdown("**Pressure of the Dew point given a temperature:**")
-                    colDP1, colDP2 = st.columns([1, 1])
-                    with colDP1:
+                    st.subheader("1.2- BubbleP point")
 
-                        T2 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-                        buttonDP = st.form_submit_button("GO!")
+                    with st.form(key = "BubbleP"):
+                        st.markdown("**Pressure of the Bubble point given a temperature:**")
+                        colBP1, colBP2 = st.columns([1, 1])
+                        with colBP1:
 
-                        if buttonDP:
-    
+                            T1 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                            buttonBP = st.form_submit_button("GO!")
 
-                            with colDP2:
-                                st.markdown("__Pressure__")
-                                with st.spinner('Calculating...'):
-                                    st.markdown("**{:.2f} kPa**".format(flash_c.dewP(T2, components)))
-                                    st.success("Calculations complete!")
-        
-        else:
-            st.error("Fracction values sum must be non-zero!")   
-    ################################################################################
-    ################################################################################
-    ################################################################################
-    ################################################################################           
-    with simulations:
-        st.header("2.- Flash Drum simulations 💻")
-        st.markdown("In this section you can make flash drum simulations")
-        flash_s = fd.FlashDrum()
+                            if buttonBP:
 
-        simulation = st.selectbox(label = "Choose simulation type", options=["Isothermal Flash Drum", "Adiabatic Flash Drum"])
-        if nonZero > 0:
-            
-            Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-            Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-            mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
-            stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = fraction, molarFlow= mFfeed)
-            flash_s.setFeedStream(stream_s)
 
-            if simulation == "Isothermal Flash Drum":
+                                with colBP2:
+                                    st.markdown("__Pressure__")
+                                    with st.spinner('Calculating...'):
+                                        st.markdown("**{:.2f} kPa**".format(flash_c.bubbleP(T1, components)))
+                                        st.success("Calculations complete!")
 
-                st.subheader("2.1- Isothermal Flash Drum")        
 
-                with st.form(key = "IsothermalFlash"):
-                    st.markdown("**Isothermal flash drum simulation given a temperature and pressure:**")
+                elif Calculation == "DewT point":
 
-                    colIF1, colIF2 = st.columns([1, 2])
-                    with colIF1:
-                        T3 = st.number_input(label = "Drum Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-                        P3 = st.number_input(label = "Drum Pressure in kPa",min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                        energyBalance = st.selectbox(label = "Energy balance?", options=[True, False])
-                        buttonIF = st.form_submit_button("GO!")
-                    with colIF2:
-                        # ESPACIO PARA UNA IMAGEN
-                        pass
+                        st.subheader("1.3- DewT point")
 
-                    if buttonIF:
+                        with st.form(key = "DewT"):
                             
-                        if energyBalance:
+                            st.markdown("**Temperature of the Dew point given a pressure:**")
+                            colDT1, colDT2 = st.columns([1, 1])
+                            with colDT1:
+                                
+                                P2 = st.number_input(label = "Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                                                
+                                buttonDT = st.form_submit_button("GO!")
+
+                                if buttonDT:
+                    
+
+                                    with colDT2:
+                                        st.markdown("__Temperature__")
+                                        with st.spinner('Calculating...'):
+                                            st.markdown("**{:.2f} K**".format(flash_c.dewT(P2, components)))
+                                            st.success("Calculations complete!")
+
+
+                elif Calculation == "DewP point":
+
+                    st.subheader("1.4- DewP point")
+                    
+                    with st.form(key = "DewP"):
+                        st.markdown("**Pressure of the Dew point given a temperature:**")
+                        colDP1, colDP2 = st.columns([1, 1])
+                        with colDP1:
+
+                            T2 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                            buttonDP = st.form_submit_button("GO!")
+
+                            if buttonDP:
+        
+
+                                with colDP2:
+                                    st.markdown("__Pressure__")
+                                    with st.spinner('Calculating...'):
+                                        st.markdown("**{:.2f} kPa**".format(flash_c.dewP(T2, components)))
+                                        st.success("Calculations complete!")
+            
+            else:
+                st.error("Fracction values sum must be non-zero!")   
+
+    elif option == "Simulations":          
+        with simulations:
+            st.header("2.- Flash Drum simulations 💻")
+            st.markdown("In this section you can make flash drum simulations")
+            flash_s = fd.FlashDrum()
+
+            simulation = st.selectbox(label = "Choose simulation type", options=["Isothermal Flash Drum", "Adiabatic Flash Drum"])
+            if nonZero > 0:
+                
+                Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
+                stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = feed_Stream.getmC(), molarFlow= mFfeed)
+                flash_s.setFeedStream(stream_s)
+
+                if simulation == "Isothermal Flash Drum":
+
+                    st.subheader("2.1- Isothermal Flash Drum")        
+
+                    with st.form(key = "IsothermalFlash"):
+                        st.markdown("**Isothermal flash drum simulation given a temperature and pressure:**")
+
+                        colIF1, colIF2 = st.columns([1, 2])
+                        with colIF1:
+                            T3 = st.number_input(label = "Drum Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                            P3 = st.number_input(label = "Drum Pressure in kPa",min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                            energyBalance = st.selectbox(label = "Energy balance?", options=[True, False])
+                            buttonIF = st.form_submit_button("GO!")
+                        with colIF2:
+                            # ESPACIO PARA UNA IMAGEN
+                            pass
+
+                        if buttonIF:
+                                
+                            if energyBalance:
+
+                                with st.spinner("Calculating..."):
+                                    flash_s.isothermal(T3, P3, components, True)
+                                    st.text(flash_s.Streams(True))
+                                    st.success("Calculations complete!")
+                            else:
+                                with st.spinner("Calculating..."):
+                                    flash_s.isothermal(T3, P3, components)
+                                    st.text(flash_s.Streams())
+                                    st.success("Calculations complete!")
+
+                elif simulation == "Adiabatic Flash Drum":
+
+                    st.subheader("2.2- Adiabatic Flash Drum")
+                
+
+                    with st.form(key = "AdiabaticFlash"):
+                        st.markdown("**Adiabatic flash drum calculations given a pressure:**")
+
+                        colAF1, colAF2 = st.columns([1, 2])
+                        with colAF1:
+                            P4 = st.number_input(label = "Drum Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                            buttonAF = st.form_submit_button("GO!")
+                        with colAF2:
+                            # ESPACIO PARA UNA IMAGEN
+                            pass
+
+                        if buttonAF:
 
                             with st.spinner("Calculating..."):
-                                flash_s.isothermal(T3, P3, components, True)
+                                flash_s.adiabatic(P4, components)
                                 st.text(flash_s.Streams(True))
                                 st.success("Calculations complete!")
-                        else:
-                            with st.spinner("Calculating..."):
-                                flash_s.isothermal(T3, P3, components)
-                                st.text(flash_s.Streams())
-                                st.success("Calculations complete!")
-
-            elif simulation == "Adiabatic Flash Drum":
-
-                st.subheader("2.2- Adiabatic Flash Drum")
-            
-
-                with st.form(key = "AdiabaticFlash"):
-                    st.markdown("**Adiabatic flash drum calculations given a pressure:**")
-
-                    colAF1, colAF2 = st.columns([1, 2])
-                    with colAF1:
-                        P4 = st.number_input(label = "Drum Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                        buttonAF = st.form_submit_button("GO!")
-                    with colAF2:
-                        # ESPACIO PARA UNA IMAGEN
-                        pass
-
-                    if buttonAF:
-
-                        with st.spinner("Calculating..."):
-                            flash_s.adiabatic(P4, components)
-                            st.text(flash_s.Streams(True))
-                            st.success("Calculations complete!")
 
 
-        else: 
-            st.error("Fracction values sum must be non-zero!") 
+            else: 
+                st.error("Fracction values sum must be non-zero!") 
 
-        
-
-    ################################################################################
-    ################################################################################
-    ################################################################################
-    ################################################################################
-    
-    if len(fraction) > 1:
+    else:
         with diagrams:
             st.header("3.- Binary phase diagrams ☁")
             flash_d = fd.FlashDrum()
@@ -346,12 +332,6 @@ if len(fraction) > 0:
                                                 )
                                 st.write(fig)
                     
-
-        ###############################################################################
-        ################################################################################
-        ################################################################################
-        ################################################################################
-
 
 with footer:
     st.text("Here goes extra infromation about me or the app.")

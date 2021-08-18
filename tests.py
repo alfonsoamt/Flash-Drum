@@ -12,12 +12,12 @@ if __name__ == '__main__':
 
     c = parameters([C1, C2])
 
-    Tf = 420
-    Pf = 400
-    feedStream = Stream('Feed', Tf - 40, Pf, 100, z)
+    Tf = 380
+    Pf = 300
+    feedStream = Stream('Feed', Tf, Pf, 100, z)
     flash.setFeedStream(feedStream)
-    T = 393.15
-    P = 200
+    T = 405
+    P = 250
 
     flash.isothermal(T, P, c, True)
     print(flash.Streams(True))
