@@ -18,15 +18,17 @@ compounds = ["benzene", "toluene", "chlorobenzene", "p-xylene",  "styrene"]
 with header:
     st.title("FLASH DRUM 🔥!")
     st.markdown("Make calculations, simulate a flash drum unit and generate phase diagrams for ideal mixtures!")
-    st.image("./media/main_flash.png", width = 800)
+    colH = st.columns([50,1])
+    with colH[0]:
+        st.image("./media/main_flash.png", use_column_width = True)
 
 with mixture:
     st.header("Prepare your mixture!")
     st.markdown("Choose at leats two comoponents and introduce its molar composition.  \n"
-        "**NOTE:** the sum of the mole fractions must be equals to **ONE** (_1.0_). If it is greater molar, compositions will be normalized.")
+        "**NOTE:** _the sum of the mole fractions must be equals to **ONE** (1.0). If it is greater molar, compositions will be normalized._")
 
 
-    components = st.multiselect(label="Choose the mixture components", options= compounds)
+    components = st.multiselect(label="Choose the components", options= compounds)
     fraction = {}    
    
     for i in components:
@@ -36,11 +38,12 @@ with mixture:
     current_mixture = [key for key in fraction.keys()]
     components = fd.parameters(current_mixture)  
     nonZero = sum([z for z in fraction.values()])
-    feed_Stream = Stream(mComposition = fraction)
-    feed_Stream.normalize()
-    option = st.selectbox("Select an option", ["Calculations", "Simulations", "Diagrams"])
+    if nonZero > 0:
+        feed_Stream = Stream(mComposition = fraction)
+        feed_Stream.normalize()
+        option = st.selectbox("Select an option", ["Calculations", "Simulations", "Diagrams"])
 
-if len(fraction) > 1:
+if len(fraction) > 1 and nonZero > 0:
 
     if option == "Calculations":
 
@@ -87,7 +90,7 @@ if len(fraction) > 1:
                         colBP1, colBP2 = st.columns([1, 1])
                         with colBP1:
 
-                            T1 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                            T1 = st.number_input(label = "Temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
                             buttonBP = st.form_submit_button("GO!")
 
                             if buttonBP:
@@ -133,7 +136,7 @@ if len(fraction) > 1:
                         colDP1, colDP2 = st.columns([1, 1])
                         with colDP1:
 
-                            T2 = st.number_input(label = "Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                            T2 = st.number_input(label = "Temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
                             buttonDP = st.form_submit_button("GO!")
 
                             if buttonDP:
@@ -157,28 +160,25 @@ if len(fraction) > 1:
             simulation = st.selectbox(label = "Choose simulation type", options=["Isothermal Flash Drum", "Adiabatic Flash Drum"])
             if nonZero > 0:
                 
-                Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-                Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
-                stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = feed_Stream.getmC(), molarFlow= mFfeed)
-                flash_s.setFeedStream(stream_s)
-
+                
                 if simulation == "Isothermal Flash Drum":
+
+                    
 
                     st.subheader("2.1- Isothermal Flash Drum")        
 
                     with st.form(key = "IsothermalFlash"):
-                        st.markdown("**Isothermal flash drum simulation given a temperature and pressure:**")
 
-                        colIF1, colIF2 = st.columns([1, 2])
-                        with colIF1:
-                            T3 = st.number_input(label = "Drum Temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
-                            P3 = st.number_input(label = "Drum Pressure in kPa",min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                            energyBalance = st.selectbox(label = "Energy balance?", options=[True, False])
-                            buttonIF = st.form_submit_button("GO!")
-                        with colIF2:
-                            # ESPACIO PARA UNA IMAGEN
-                            pass
+                        Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
+                        Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                        mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
+                        stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = feed_Stream.getmC(), molarFlow= mFfeed)
+                        flash_s.setFeedStream(stream_s)
+                        st.markdown("**Isothermal flash drum simulation given a temperature and pressure:**")
+                        T3 = st.number_input(label = "Drum Temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
+                        P3 = st.number_input(label = "Drum Pressure in kPa",min_value= 10.0, max_value=1100.0, step = 10.0, format = "%.2f")
+                        energyBalance = st.checkbox(label = "Energy balance")
+                        buttonIF = st.form_submit_button("GO!")
 
                         if buttonIF:
                                 
@@ -197,18 +197,19 @@ if len(fraction) > 1:
                 elif simulation == "Adiabatic Flash Drum":
 
                     st.subheader("2.2- Adiabatic Flash Drum")
-                
-
                     with st.form(key = "AdiabaticFlash"):
-                        st.markdown("**Adiabatic flash drum calculations given a pressure:**")
+                        
+                        flash_s.setFeedStream(Stream(mComposition = feed_Stream.getmC()))
+                        Pfeeda = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
+                        mFfeeda = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
+                        stream_sa = Stream(name = "FEED", Temperature = flash_s.bubbleT(Pfeeda, components), Pressure = Pfeeda, mComposition = feed_Stream.getmC(), molarFlow= mFfeeda)
+                        flash_s.setFeedStream(stream_sa)
+                        
+                        st.markdown("**Adiabatic flash drum simulation given a pressure:**")
 
-                        colAF1, colAF2 = st.columns([1, 2])
-                        with colAF1:
-                            P4 = st.number_input(label = "Drum Pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-                            buttonAF = st.form_submit_button("GO!")
-                        with colAF2:
-                            # ESPACIO PARA UNA IMAGEN
-                            pass
+
+                        P4 = st.number_input(label = "Drum Pressure in kPa", min_value= 10.0, max_value=Pfeeda, step = 10.0, format="%.2f")
+                        buttonAF = st.form_submit_button("GO!")
 
                         if buttonAF:
 
@@ -252,11 +253,11 @@ if len(fraction) > 1:
                         P_d = st.number_input(label = "System pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
                         n = st.number_input(label = "Number of points", min_value = 3, max_value = 101, step= 1)
                         x = np.linspace(0.0, 1.0, num = n)
-                        buttonDT = st.form_submit_button("Generate diagrams!")
+                        buttonDT = st.form_submit_button("Generate diagram!")
 
                         if buttonDT:
 
-                            with st.spinner("Generating diagrams..."):
+                            with st.spinner("Generating diagram..."):
                                 
                                 T_b = []
                                 T_d = []
@@ -287,19 +288,19 @@ if len(fraction) > 1:
                                                 plot_bgcolor = '#01143D',
                                                 title = {'font': {'family': 'Bahnschrift SemiBold Condensed,Impact,Overpass,Droid Sans,Raleway,Arial', 'size': 25}, 'text' : "Phase equilibrium of {} and {} at {} kPa".format(C1, C2, P_d)},
                                                 )
-                                st.write(fig)
+                                st.plotly_chart(fig, use_container_width = True)
 
                     elif Diagram == "P vs xy Diagram":
                         
                         st.subheader("3.2- P vs xy Diagram")
-                        T_d = st.number_input(label = "System temperature in K", min_value=200.0, max_value=800.0, step=1.0, format = "%.2f")
+                        T_d = st.number_input(label = "System temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
                         n = st.number_input(label = "Number of points", min_value = 3, max_value = 101, step= 1)
                         x = np.linspace(0.0, 1.0, num = n)
-                        buttonDT = st.form_submit_button("Generate diagrams!")
+                        buttonDT = st.form_submit_button("Generate diagram!")
 
                         if buttonDT:
 
-                            with st.spinner("Generating diagrams..."):
+                            with st.spinner("Generating diagram..."):
                                 
                                 P_b = []
                                 P_d = []
@@ -330,7 +331,7 @@ if len(fraction) > 1:
                                                 plot_bgcolor = '#01143D',
                                                 title = {'font': {'family': 'Bahnschrift SemiBold Condensed,Impact,Overpass,Droid Sans,Raleway,Arial', 'size': 25}, 'text' : "Phase equilibrium of {} and {} at {} K".format(C1, C2, T_d)},
                                                 )
-                                st.write(fig)
+                                st.plotly_chart(fig, use_container_width = True)
                     
 
 with footer:

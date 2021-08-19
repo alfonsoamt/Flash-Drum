@@ -128,7 +128,7 @@ class FlashDrum():
         stream_table2 = ""
         for key in self.feed.getmC().keys():
             stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
-              "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
+              "\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
               "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
         stream_table3 = ""
         if energy:    
