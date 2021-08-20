@@ -1,9 +1,6 @@
 from flash import *
 from stream import Stream
 
-
-
-
 if __name__ == '__main__':
     flash = FlashDrum()
     C1 = 'benzene'

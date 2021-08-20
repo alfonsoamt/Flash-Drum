@@ -113,24 +113,66 @@ class FlashDrum():
     def Streams(self, energy = False):
         ''' Display the stream results in a table. '''
 
-        stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
-            + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
-            + "\n" + "-"*100 + \
-            "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
-              "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
-              "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
-            "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
-              "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
-              "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
-            "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
-              "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
-              "\t\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
-        stream_table2 = ""
-        for key in self.feed.getmC().keys():
-            stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
-              "\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
-              "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+        if self.liquid.getmF() == 0:
+
+            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
+                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
+                + "\n" + "-"*100 + \
+                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
+                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
+                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
+                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
+                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
+                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
+                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
+                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
+                "\t\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
+            stream_table2 = ""
+            for key in self.feed.getmC().keys():
+                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
+                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
+                "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+
+        elif self.vapor.getmF() == 0:
+            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
+                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
+                + "\n" + "-"*100 + \
+                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
+                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
+                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
+                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
+                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
+                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
+                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
+                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
+                "\t\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
+            stream_table2 = ""
+            for key in self.feed.getmC().keys():
+                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
+                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
+                "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+        
+        else:
+            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
+                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
+                + "\n" + "-"*100 + \
+                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
+                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
+                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
+                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
+                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
+                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
+                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
+                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
+                "\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
+            stream_table2 = ""
+            for key in self.feed.getmC().keys():
+                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
+                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
+                "\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+
         stream_table3 = ""
+
         if energy:    
             stream_table3 += "\n\t\t\t" + "h_f = " + str(round(self.feed.getH(), 3)) + " kJ/mol" + \
                 "\t" + "h_v = " + str(round(self.vapor.getH(), 3)) + " kJ/mol" + \
@@ -399,6 +441,7 @@ class FlashDrum():
             hg = {}
             hl = {}
             m = GEKKO()
+            m.options.MAX_ITER = 500
             #m.options.MAX_ITER = 500
             Psi = m.Var(value=0.5, lb= 0.0, ub = 1.0)
             T = m.Var(value=(T_bubble + T_dew) * 0.5, lb = 200, ub = 800)

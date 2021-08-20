@@ -1,4 +1,3 @@
-
 class Stream():
 
     def __init__(self, name = "stream_000", Temperature = None,  Pressure = None, molarFlow = 0.0, mComposition = None, Enthalpy = None):
