@@ -283,8 +283,8 @@ if len(fraction) > 1 and nonZero > 0:
         with st.form(key = "IsothermalFlash"):
 
             Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
-            Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-            mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 1, max_value=1000000.00, step = 1)
+            Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10, max_value=1100, step = 10.0, format="%.2f")
+            mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 1, max_value=1000000, step = 1)
             stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = feed_Stream.getmC(), molarFlow= mFfeed)
             flash_s.setFeedStream(stream_s)
             T3 = st.number_input(label = "Drum Temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
