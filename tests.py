@@ -3,18 +3,19 @@ from stream import Stream
 
 if __name__ == '__main__':
     flash = FlashDrum()
-    C1 = 'benzene'
-    C2 = 'toluene'
-    z = {C1: 0.5, C2: 0.5}
+    C1 = 'chlorobenzene'
+    C2 = 'styrene'
+    C3 = 'p-xylene'
+    z = {C1: 0.3, C2: 0.5, C3 : 0.2}
 
-    c = parameters([C1, C2])
+    c = parameters([C1, C2, C3])
 
-    Tf = 380
-    Pf = 300
-    feedStream = Stream('Feed', Tf, Pf, 100, z)
+    Tf = 435
+    Pf = 200
+    feedStream = Stream('Feed', Tf, Pf, 1000000, z)
     flash.setFeedStream(feedStream)
-    T = 405
-    P = 250
+    T = 460
+    P = 200
 
     flash.isothermal(T, P, c, True)
     print(flash.Streams(True))

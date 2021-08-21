@@ -129,11 +129,11 @@ with header:
     colH = st.columns([50,1])
     with colH[0]:
         st.image("./media/main_flash.png", use_column_width = True)
-    st.markdown("A flash drum is an unit operation where a feed stream $F$ (with $z$ composition)\
-         is separated into a vapor stream $V$ (with $y$ composition), and a liquid stream $L$ (with $x$ composition).\
-        This is a single-equilibrium separation-stage, that means that the temperature and pressure in the outlet streams are the same \
+    st.markdown("A flash drum is a unit operation where a feed stream $F$ (with $z$ composition)\
+         is separated into a vapor stream $V$ (with $y$ composition) and a liquid stream $L$ (with $x$ composition).\
+        This is a single-equilibrium separation stage, which means that the temperature and pressure in the outlet streams are the same \
         $T_{V}=T_{L}$, $P_{V}=P_{L}$. Through **Rachford–Rice** procedures you can: \n"
-    " * do bubble and dew point calcuations  \n"
+    " * do bubble and dew point calculations  \n"
     " * model an isothermal or adiabatic flash")
     st.latex(r'''f(\Psi)= \sum_{i=1}^{C}\frac{z_{i}(1 - K_{i})}{1 + \Psi(K_{i} - 1)} = 0''')
     st.caption("Rachford–Rice equation")
@@ -143,7 +143,7 @@ with header:
 
 with mixture:
     st.header("Prepare your mixture!")
-    st.markdown("Choose at leats two comoponents and set molar composition $z_{i}$.  \n"
+    st.markdown("Select at least two components and set molar composition $z_{i}$.  \n"
         "**NOTE:** *the sum of the mole fractions must be equals to **ONE** (1.0). If it is greater molar, compositions will be normalized*.")
 
     components = st.multiselect(label="Choose the components", options= compounds)
@@ -168,9 +168,9 @@ if len(fraction) > 1 and nonZero > 0:
 
         st.header("1.- Mixture calculations 💥")
         st.markdown("A mixture of a given composition $z$ has a ***bubble*** and a ***dew point***. ""If one variable is fixed, ***Pressure*** $P$ or ***Temperature*** $T$, \
-            then you can find the another one. For a bubble point $\Psi = 0$ the **Rachford–Rice** equation is simplied to:")
+            you can find another one. For a bubble point $\Psi = 0$, the **Rachford–Rice** equation is simplified to:")
         st.latex(r'''f(\Psi = 0) = \sum_{i}^{C}z_{i}K_{i} - 1 = 0''')
-        st.markdown("And for a dew point  $\Psi = 1$ the ecuation is:")
+        st.markdown("And for a dew point $\Psi = 1$, the equation is:")
         st.latex(r'''f(\Psi = 1) = \sum_{i}^{C}\frac{z_{i}}{K_{i}} - 1 = 0''')
 
         stream_c = Stream(mComposition = feed_Stream.getmC())
@@ -268,10 +268,10 @@ if len(fraction) > 1 and nonZero > 0:
         
     with simulations:
         st.header("2.- Flash Drum simulations 💻")
-        st.markdown("This app allow you perform two types of simulation:""\n1.- Isothermal\n2.- Adiabatic""\nBoth are in steady state and both requires the **Rachford–Rice** procedure \
-            for solve the system.")
+        st.markdown("This app allows you to perform two types of simulation:""  \n1.- Isothermal    \n2.- Adiabatic""   \nBoth are in steady-state, and both require the **Rachford–Rice** procedure \
+            for solving the system.")
         st.subheader("2.1- Isothermal Flash Drum")  
-        st.markdown("In the isothermal flash, a feed stream goes through the drum where you fix the temerature and pressure, to determinate the outlet compositions $x$ and $y$ and the outlet\
+        st.markdown("In the isothermal flash, a feed stream goes through the drum (where you fix the temperature and pressure), and the simulator solves the outlet compositions $x$ and $y$ and the outlet\
              streams $L$ and $V$. Also, if you want to know the heat $Q$ required for the drum, you must activate the energy balance option.") 
         st.markdown("The first step is to find the $\Psi$ ratio for the given pressure $P$ and temperature $T$ which makes the **Rachford–Rice** equation equals to $0$.\n"\
             "Then find the outlet molar flows by $V = F\Psi$ and $L = F - V$ and the molar compositions by:")
@@ -284,7 +284,7 @@ if len(fraction) > 1 and nonZero > 0:
 
             Tfeed = st.number_input(label = "Feedstream temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
             Pfeed = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-            mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
+            mFfeed = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 1, max_value=1000000.00, step = 1)
             stream_s = Stream(name = "FEED", Temperature = Tfeed, Pressure = Pfeed, mComposition = feed_Stream.getmC(), molarFlow= mFfeed)
             flash_s.setFeedStream(stream_s)
             T3 = st.number_input(label = "Drum Temperature in K", min_value=250.0, max_value=800.0, step=1.0, format = "%.2f")
@@ -301,8 +301,8 @@ if len(fraction) > 1 and nonZero > 0:
                     st.success("Calculations complete!")
   
         st.subheader("2.2- Adiabatic Flash Drum")
-        st.markdown("In the adiabatic flash, a saturated liquid vaporizes in a valve adiabatically ($Q = 0$) by a pressure reduction, and goes through the drum to be separated. Here you only fix the drum pressure."\
-            "This procedure solves both, the **Rachford–Rice** equation and the energy balance simultaneously:")
+        st.markdown("A **saturated** liquid vaporizes adiabatically ($Q = 0$) due to a pressure reduction on a valve, then goes through the drum to be separated. Here you only fix the drum pressure."\
+            " This procedure solves both, the **Rachford–Rice** equation and the energy balance simultaneously:")
         st.latex(r'''f(\Psi)= \sum_{i=1}^{C}\frac{z_{i}(1 - K_{i})}{1 + \Psi(K_{i} - 1)} = 0''')
         st.latex(r'''f(T) = Vh_{V} + Lh_{L} - Fh_{F} = 0''')
         with st.form(key = "AdiabaticFlash feed"):
@@ -310,7 +310,7 @@ if len(fraction) > 1 and nonZero > 0:
             
             flash_s.setFeedStream(Stream(mComposition = feed_Stream.getmC()))
             Pfeeda = st.number_input(label = "Feedstream pressure in kPa", min_value= 10.0, max_value=1100.0, step = 10.0, format="%.2f")
-            mFfeeda = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 0.01, max_value=1000000.00, step = 0.01, format= "%.2f")
+            mFfeeda = st.number_input(label = "Feedstream molar flow in mol/h", min_value= 1, max_value=1000000.00, step = 1)
             stream_sa = Stream(name = "FEED", Temperature = flash_s.bubbleT(Pfeeda, components), Pressure = Pfeeda, mComposition = feed_Stream.getmC(), molarFlow= mFfeeda)
             buttonAFF = st.form_submit_button("Save feedstream!")
             flash_s.setFeedStream(stream_sa)
@@ -330,9 +330,9 @@ if len(fraction) > 1 and nonZero > 0:
     with diagrams:
         st.header("3.- Binary phase diagrams ☁")
         st.markdown("Phase diagrams are representations where two or more phases co-exist. \
-            Here you can generate a binary phase diagrams for the liquid and vapor phase at a given pressure or temperature. \
-            In order to generate this diagram bubble points and dew points are calculated changing the composition to obtain different points. \
-                The more points you introduce the longer it will take for the diagram.")
+            Here you can generate binary phase diagrams for the liquid and vapor phase at a given pressure or temperature. \
+            For drawing this diagram bubble points and dew points are calculated by changing the composition to obtain different points. \
+                The more points for the diagram, the longer it will take to draw it.")
         
         components_d = fd.parameters(current_mixture)
         
@@ -370,7 +370,7 @@ if len(fraction) > 1 and nonZero > 0:
                     with st.spinner("Generating diagram Txy..."):
                         
                         figTxy = Txy_diagram(flash_d, C1, C2, P_dTxy, components_d, n)                                
-                        st.plotly_chart(figTxy, use_container_width = True)
+                        st.plotly_chart(figTxy)
                            
         st.subheader("3.2- P vs xy Diagram")
         st.markdown("Given a temperature generate bubble and dew points in the composition range.")
@@ -392,8 +392,36 @@ if len(fraction) > 1 and nonZero > 0:
                     with st.spinner("Generating diagram Pxy..."):
 
                         figPxy = Pxy_diagram(flash_d, C1, C2, T_dPxy, components_d, n)  
-                        st.plotly_chart(figPxy, use_container_width = True)
+                        st.plotly_chart(figPxy)
 
 with footer:
-    st.header("About me!")
-    st.markdown("Here goes extra infromation about me or the app.")
+
+    st.header("😁 About me!")
+    st.markdown("Hello there! my name is Alfonso, I am a chemical engineer, and I made this app in 🐍 Python and 💚 for educational purposes as a personal project. For more information about me follow me in social media: ")
+    st.image("./media/name.png", width = 300)
+    colFoot1, colFoot2, colFoot3, colFoot4, colFoot5, colFoot6, colFoot7, colFoot8, colFoot9 = st.columns([1,2,1,2,1,2,1,2,10])
+    with colFoot1:
+        st.image("./media/linkedin.png", use_column_width = True)
+
+    with colFoot2:
+        st.markdown("[LinkedIn](https://www.linkedin.com/in/alfonsoamt/)")
+        
+        
+        
+    with colFoot3:    
+        st.image("./media/github.png", use_column_width = True)
+        
+        
+        
+        
+    with colFoot4:
+        st.markdown("[GitHub](https://github.com/alfonsoamt)")
+    with colFoot5:
+        st.image("./media/twitter.png", use_column_width = True)
+
+    with colFoot6:
+        st.markdown("[Twitter](https://twitter.com/alfonsoamt_)")
+    with colFoot7:
+        st.image("./media/instagram.png", use_column_width = True)
+    with colFoot8:
+        st.markdown("[Instagram](https://www.instagram.com/alfonsoamt_/)")

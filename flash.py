@@ -113,63 +113,83 @@ class FlashDrum():
     def Streams(self, energy = False):
         ''' Display the stream results in a table. '''
 
-        if self.liquid.getmF() == 0:
+        F = str(round(self.feed.getmF(), 3))
+        V = str(round(self.vapor.getmF(), 3))
+        L = str(round(self.liquid.getmF(), 3))
+        T_f = str(round(self.feed.getT(), 2))
+        T_v = str(round(self.vapor.getT(), 2))
+        T_l = str(round(self.liquid.getT(), 2))
+        P_f = str(self.feed.getP())
+        P_v = str(self.vapor.getP())
+        P_l = str(self.liquid.getP())
 
-            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
-                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
-                + "\n" + "-"*100 + \
-                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
-                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
-                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
-                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
-                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
-                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
-                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
-                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
-                "\t\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
-            stream_table2 = ""
-            for key in self.feed.getmC().keys():
-                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
-                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
-                "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+        stream_table1 = ""
+        stream_table1 += "-"*100
+        stream_table1 += "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper()
+        stream_table1 += "\n"+"-"*100
+        stream_table1 += "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID"
+        stream_table1 += "\n" + "-"*100
+        stream_table1 += "\n\t\t\t" + "T_f = " + T_f + " K" + "\t\t" + "T_v = " + T_v + " K" + "\t\t  " + "T_l = " + T_l + " K"
+        stream_table1 += "\n\t\t\t" + "P_f = " + P_f + " kPa" + "\t\t" + "P_v = " + P_v + " kPa" + "\t\t  " + "P_l = " + P_l + " kPa"
 
-        elif self.vapor.getmF() == 0:
-            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
-                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
-                + "\n" + "-"*100 + \
-                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
-                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
-                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
-                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
-                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
-                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
-                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
-                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
-                "\t\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
-            stream_table2 = ""
-            for key in self.feed.getmC().keys():
-                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
-                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
-                "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
-        
-        else:
-            stream_table1 = "-"*100 + "\n\t\t\t\tF L A S H  D R U M: \t" + self.mode.upper() + "\n"+"-"*100 \
-                + "\nStreams:\t\t" + "FEED" + " " * 20 + "VAPOR " + " " * 20 + "LIQUID" \
-                + "\n" + "-"*100 + \
-                "\n\t\t\t" + "T_f = " + str(round(self.feed.getT(), 2)) + " K" + \
-                "\t\t" + "T_v = " + str(round(self.vapor.getT(), 2)) + " K" + \
-                "\t\t  " + "T_l = " + str(round(self.liquid.getT(), 2)) + " K" + \
-                "\n\t\t\t" + "P_f = " + str(self.feed.getP()) + " kPa" + \
-                "\t\t" + "P_v = " + str(self.vapor.getP()) + " kPa" + \
-                "\t\t  " + "P_l = " + str(self.liquid.getP()) + " kPa" + \
-                "\n\t\t\t" + "F = " + str(round(self.feed.getmF(), 3)) + " mol/h" + \
-                "\t\t" + "V = " + str(round(self.vapor.getmF(), 3)) + " mol/h" + \
-                "\t  " + "L = " + str(round(self.liquid.getmF(), 3)) + " mol/h"
-            stream_table2 = ""
-            for key in self.feed.getmC().keys():
-                stream_table2 += "\n" + key + "\t\t\tz = " + str(round(self.feed.getmC(key), 3)) + \
-                "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3)) + \
-                "\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+        if len(F) >  5:
+
+            if len(V) > 5:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t" + "V = " + V + " mol/h" + "\t  " + "L = " + L + " mol/h"
+
+            else:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t" + "V = " + V + " mol/h" + "\t\t  " + "L = " + L + " mol/h"
+
+        elif len(F) > 2:
+
+            if len(V) > 5:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t\t" + "V = " + V + " mol/h" + "\t  " + "L = " + L + " mol/h"
+
+            else:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t\t" + "V = " + V + " mol/h" + "\t\t  " + "L = " + L + " mol/h"
+
+        elif len(F) > 0:
+
+            if len(V) > 0:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t\t" + "V = " + V + " mol/h" + "\t\t  " + "L = " + L + " mol/h"
+
+            else:
+
+                stream_table1 += "\n\t\t\t" + "F = " + F + " mol/h" + "\t\t" + "V = " + V + " mol/h" + "\t\t\t  " + "L = " + L + " mol/h"
+
+        stream_table2 = ""
+
+        for key in self.feed.getmC().keys():
+
+            if len(key) > 7:
+
+                stream_table2 += "\n" + key + "\t\tz = " 
+            else: 
+                stream_table2 += "\n" + key + "\t\t\tz = "
+
+            stream_table2 += str(round(self.feed.getmC(key), 3))
+
+            if len(str(round(self.feed.getmC(key), 3))) > 4:
+
+                stream_table2 += "\t\t" + "y = " + str(round(self.vapor.getmC(key), 3))
+
+            else:
+
+                stream_table2 += "\t\t\t" + "y = " + str(round(self.vapor.getmC(key), 3))
+
+            if len(str(round(self.vapor.getmC(key), 3))) > 4:
+            
+                stream_table2 += "\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+
+            else:
+
+                stream_table2 += "\t\t\t  " + "x = " + str(round(self.liquid.getmC(key),3))
+
 
         stream_table3 = ""
 
@@ -177,7 +197,7 @@ class FlashDrum():
             stream_table3 += "\n\t\t\t" + "h_f = " + str(round(self.feed.getH(), 3)) + " kJ/mol" + \
                 "\t" + "h_v = " + str(round(self.vapor.getH(), 3)) + " kJ/mol" + \
                 "\t  " + "h_l = " + str(round(self.liquid.getH(), 3)) + " kJ/mol" + "\n" + "-"*100 + \
-                "\n\t\t\tHEAT: Q = " + str(round(self.Heat)) + " kJ/mol"
+                "\n\t\t\tHEAT: Q = " + str(round(self.Heat)) + " kW"
         stream_table3 += "\n" + "-"*100
         stream_table = stream_table1 + stream_table2 + stream_table3
         return stream_table
@@ -275,7 +295,7 @@ class FlashDrum():
                 
                 for key in self.feed.getmC().keys():
                     # Mean heat capacity
-                    cpl[key] = meanCP(CP_L, T_bubble,  T_dew, tuple([value for value in c['CPL'][key].values()]))
+                    cpl[key] = meanCP(CP_L, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPL'][key].values()]))
                     # Enthalply calculation.
                     if Tf_mode == "liquid":
 
@@ -284,7 +304,7 @@ class FlashDrum():
 
                     elif Tf_mode == "vapor":
 
-                        cpig[key] = meanCP(CP_ig, T_bubble,  T_dew, tuple([value for value in c['CPig'][key].values()]))
+                        cpig[key] = meanCP(CP_ig, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPig'][key].values()]))
                         tb[key] = AntoineInv(P, **c['AntoineInv'][key])
                         hf[key] = self.feed.getmC(key) * (cpl[key] * (tb[key] - Tref) + HeatVap(tb[key], **c['Hvap'][key]) + cpig[key] * (T - tb[key]))
 
@@ -297,8 +317,7 @@ class FlashDrum():
 
                 self.feed.setH(sum([value for value in hf.values()])) 
                 self.liquid.setH( sum([value for value in hl.values()]))
-                self.vapor.setH(0.0)
-
+                self.vapor.setH(0.0)  
                 # Energy balance for heat (Q) caculation.
                 self.Heat = self.vapor.getmF() * self.vapor.getH() + self.liquid.getmF() * self.liquid.getH() - self.feed.getmF() * self.feed.getH()
 
@@ -318,12 +337,10 @@ class FlashDrum():
             ## ENERGY BALANCE, if enabled ...
             if energy:
 
-
-
                 for key in self.feed.getmC().keys():
                     # Mean heat capacity
-                    cpl[key] = meanCP(CP_L, T_bubble,  T_dew, tuple([value for value in c['CPL'][key].values()]))
-                    cpig[key] = meanCP(CP_ig, T_bubble,  T_dew, tuple([value for value in c['CPig'][key].values()]))
+                    cpl[key] = meanCP(CP_L, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPL'][key].values()]))
+                    cpig[key] = meanCP(CP_ig, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPig'][key].values()]))
                     # Enthalply calculation.
                     if Tf_mode == "liquid":
 
@@ -381,15 +398,15 @@ class FlashDrum():
 
                 for key in self.feed.getmC().keys():
                     # Mean heat capacity
-                    cpl[key] = meanCP(CP_L, T_bubble,  T_dew, tuple([value for value in c['CPL'][key].values()]))
+                    cpl[key] = meanCP(CP_L, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPL'][key].values()]))
                     # Enthalply calculation.
                     if Tf_mode == "liquid":
 
-                        hf[key] = self.feed.getmC(key) * cpl[key] * (Tf - Tref)                        
+                        hf[key] = self.feed.getmC(key) * cpl[key] * (Tf - Tref)                     
 
                     elif Tf_mode == "vapor":
 
-                        cpig[key] = meanCP(CP_ig, T_bubble,  T_dew, tuple([value for value in c['CPig'][key].values()]))
+                        cpig[key] = meanCP(CP_ig, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPig'][key].values()]))
                         tb[key] = AntoineInv(P, **c['AntoineInv'][key])
                         hf[key] = self.feed.getmC(key) * (cpl[key] * (tb[key] - Tref) + HeatVap(tb[key], **c['Hvap'][key]) + cpig[key] * (T - tb[key]))
 
@@ -441,8 +458,7 @@ class FlashDrum():
             hg = {}
             hl = {}
             m = GEKKO()
-            m.options.MAX_ITER = 500
-            #m.options.MAX_ITER = 500
+            m.options.MAX_ITER = 1000
             Psi = m.Var(value=0.5, lb= 0.0, ub = 1.0)
             T = m.Var(value=(T_bubble + T_dew) * 0.5, lb = 200, ub = 800)
             # K's 
@@ -465,7 +481,7 @@ class FlashDrum():
             # Intermediate energy Balance        
             for key in self.feed.getmC().keys():
 
-                cpl[key] = meanCP(CP_L, T_bubble,  T_dew, tuple([value for value in c['CPL'][key].values()]))
+                cpl[key] = meanCP(CP_L, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPL'][key].values()]))
                 #cpig[key] = meanCP(CP_ig, T_bubble,  T_dew, tuple([value for value in c['CPig'][key].values()]))
                 hf[key] = self.feed.getmC(key) * cpl[key] * (Tf - Tref)                        
                 hl[key] = self.liquid.getmC(key) * cpl[key] * (T - Tref)
@@ -498,7 +514,7 @@ class FlashDrum():
             #Real Energy Balance        
             for key in self.feed.getmC().keys():
                 # Mean heat capacity
-                cpl[key] = meanCP(CP_L, T_bubble,  T_dew, tuple([value for value in c['CPL'][key].values()]))
+                cpl[key] = meanCP(CP_L, T_bubble * 0.8,  T_dew * 1.2, tuple([value for value in c['CPL'][key].values()]))
                 #cpig[key] = meanCP(CP_ig, T_bubble,  T_dew, tuple([value for value in c['CPig'][key].values()]))
                 # Enthalply calculation.
                 hf[key] = self.feed.getmC(key) * cpl[key] * (Tf - Tref)
